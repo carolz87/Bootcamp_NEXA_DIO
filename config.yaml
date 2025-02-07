@@ -1,0 +1,19 @@
+Resources:
+      TextExtractFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+          Handler: app.lambda_handler
+          Runtime: python3.8
+          CodeUri: .
+          MemorySize: 128
+          Timeout: 100
+          Policies:
+            - AWSLambdaBasicExecutionRole
+            - PolicyName: TextractPolicy
+              PolicyDocument:
+                Version: '2012-10-17'
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - "textract:*"
+                    Resource: "*"
