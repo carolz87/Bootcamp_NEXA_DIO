@@ -1,2 +1,5 @@
 # Arquivos de suporte para IDE
 .vscode
+
+#variáveis de Ambiente
+.env

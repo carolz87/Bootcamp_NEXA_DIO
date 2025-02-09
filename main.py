@@ -2,7 +2,10 @@ from pathlib import Path
 import boto3
 from mypy_boto3_rekognition.type_defs import (CelebrityTypeDef,RecognizeCelebritiesResponseTypeDef)
 from PIL import Image, ImageDraw, ImageFont
+import dotenv
 import os
+
+dotenv.load_dotenv()
 
 def conecta():
     session = boto3.Session(
@@ -15,9 +18,9 @@ def conecta():
     
     return client
 
-def desconecta(client):
-    client.close()
-    
+def desconecta(conn):
+    conn.close()
+
 
 def caminho(arquivo: str) -> str:
     return str(Path(__file__).parent / "img" / arquivo)
@@ -25,7 +28,7 @@ def caminho(arquivo: str) -> str:
 
 def reconhecimento(foto: str) -> RecognizeCelebritiesResponseTypeDef:
     with open(foto, "rb") as image:
-        return client.reconhecimento(Image={"Bytes": image.read()})
+        return conn.recognize_celebrities(Image={"Bytes": image.read()})
 
 
 def faz_caixa(image_path: str, output_path: str, face_details: list[CelebrityTypeDef]):
@@ -58,7 +61,7 @@ def faz_caixa(image_path: str, output_path: str, face_details: list[CelebrityTyp
 
 if __name__ == "__main__":
     
-    client = conecta()
+    conn = conecta()
 
     caminho_foto = [
         caminho("001.jpg"),
@@ -76,4 +79,4 @@ if __name__ == "__main__":
         output_path = caminho(f"{Path(endereco).stem}-resultado.jpg")
         faz_caixa(endereco, output_path, faces)
     
-    desconecta(client)
+    desconecta(conn)
